@@ -7,7 +7,7 @@ When writing review comments use the following directives to provide more insigh
 
 Always specify full absolute paths for Execution directives(service lifecycle commands) to avoid reliance on environment variables like `$PATH`, which systemd does not inherit.
 
-## Requirements
+**Requirements**
 - All Execution directives such as `ExecStart`, `ExecStartPre`, `ExecStartPost`, `ExecStop`, `ExecReload` are required to use absolute paths.
 - Relative paths and bare commands are not allowed
 
