@@ -82,7 +82,7 @@ Requires=db.service
 Wants=logger.service
 ```
 
-**4. Enabling of automatic restarts as per requirements**
+**4. Enabling of automatic restarts as per need**
 
 - It controls whether services can automatically restart after it crashes.
 - Defaultly services are not restarted automatically, it stays dead after a crash(`Restart=no`)
@@ -127,4 +127,111 @@ RestartSec=5
 Type=notify
 ExecStart=/usr/bin/mydaemon
 ExecReload=/bin/kill -HUP $MAINPID
+```
+
+**6. Avoid usage of custom script**
+
+- Let systemd manage service lifecycle directly instead of using wrapper scripts.
+- Scripts add complexity and failure points and increases boot time
+- Systemd can't track processes properly through scripts making it harder to debug and maintain
+
+**Requirements**
+
+- Use direct commands in `ExecStart=` instead of scripts
+- Avoid shell script wrappers for start/stop logic
+- Do not use `PIDFile=` unless service forks non-standardly
+- it allows systemd to automatically track the main process
+
+**Example:**
+```ini
+# Instead of a script, use direct ExecStart in the unit file
+[Service]
+ExecStart=/usr/bin/myapp
+```
+
+**7. Usage of Drop-in files**
+
+- Use drop-in files for overrides, which preserves original packaged unit files and avoids editing `/usr/lib/systemd/system/` files.
+- Per-device customization without modifying base configuration.
+- Easier to track changes and updates.
+
+**Requirements**
+
+***For RDK Components***
+
+- Do not use drop-in file  files, add content to unit directly.
+
+***For OSS Components***
+
+- OSS components may use drop-in files in `/etc/systemd/system/unit.d/` 
+- it is good for per-device customization
+
+**Example:**
+```ini
+# Create /etc/systemd/system/my.service.d/override.conf
+[Service]
+Restart=always
+ExecStartPre= <Add my per device change>
+```
+
+**8. Set Timeouts and Limits Appropriately**
+
+- Define how long systemd waits for service start/stop operations.
+- If timeout is not specified, systemd uses default timeout value (90 secs)
+- Hung services block boot or shutdown
+- Clear expectations on timeout can prevent indefinite waits
+
+**Requirements**
+
+***Always specify both:***
+
+- `TimeoutStartSec=` - How long to wait for service startup (it should be 30 secs or less).
+- `TimeoutStopSec=` - How long to wait for graceful shutdown (it should be 10 secs or less).
+- If timeout value is greater than 90 seconds then proper justification is required.
+
+**Example:**
+```ini
+[Service]
+TimeoutStartSec=30
+TimeoutStopSec=10
+```
+
+**9. Boot Integration Requirement**
+
+- Link services to targets like `multi-user.target` for auto-start at boot.
+- It is essential because services won't start automatically without `[Install]` section
+- It is required to ensure that proper target linkage happens at boot phase
+
+**Requirements**
+
+***Must include `[Install]` section:***
+
+- Add `WantedBy=multi-user.target` for systemd services to ensure auto-start at boot.
+- It enables the service to start at boot.
+
+**Example:**
+```ini
+[Install]
+WantedBy=multi-user.target
+```
+
+**10. Security Isolation Requirement**
+
+- Use systemd security features to isolate services and limit damage from compromises.
+- It Limits access to system resources
+- It contains security breaches
+- It protects critical system files
+
+**Requirements**
+
+***Enable basic isolation***
+
+- `PrivateTmp=yes` - Service gets private tmp directory.
+- It is available in systemd 230.
+- It should be enabled if required by the service.
+
+**Example:**
+```ini
+[Service]
+PrivateTmp=yes
 ```
