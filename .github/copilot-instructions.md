@@ -215,23 +215,12 @@ TimeoutStopSec=10
 WantedBy=multi-user.target
 ```
 
-**10. Security Isolation Requirement**
+**10. Add proper description**
 
-- Use systemd security features to isolate services and limit damage from compromises.
-- It Limits access to system resources
-- It contains security breaches
-- It protects critical system files
-
-**Requirements**
-
-***Enable basic isolation***
-
-- `PrivateTmp=yes` - Service gets private tmp directory.
-- It is available in systemd 230.
-- It should be enabled if required by the service.
+- Adding proper description helps to understand what the service is about. 
 
 **Example:**
 ```ini
-[Service]
-PrivateTmp=yes
+[Unit]
+Description=My service
 ```
