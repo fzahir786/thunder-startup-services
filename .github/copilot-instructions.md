@@ -14,7 +14,6 @@ Always specify full absolute paths for Execution directives(service lifecycle co
 **Example:**
 ```ini
 [Service]
-[Service]
 ExecStart=/usr/bin/mydaemon --option
 ExecStartPre=/usr/bin/mkdir -p /var/run/myapp
 ExecStop=/bin/kill -TERM $MAINPID
