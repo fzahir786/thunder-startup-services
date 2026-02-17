@@ -224,5 +224,7 @@ WantedBy=multi-user.target
 Description=My service
 ```
 
+
 **Rules for adding new commits**
+
 After reviewing the systemd service files. If some change is required and the user wants you to add the changes. If user presses **Implement suggestions** do not create a new PR rather add the changes to the existing PR as new commit
