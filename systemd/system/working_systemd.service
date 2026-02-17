@@ -1,6 +1,6 @@
 [Unit]
 Description=My daemon service
-After=network.target database.service
+After=network.target database.service logger.service
 Requires=database.service
 Wants=logger.service
 [Service]
