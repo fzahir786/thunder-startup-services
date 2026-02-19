@@ -1,3 +1,12 @@
+### Review Comment Linking Guidelines
+
+When writing review comments based on custom instructions located in .github/instructions/**.instructions.md, include a direct GitHub link to the exact violated guideline in the respective instruction file. Use the following format:
+
+    Refer: https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/instructions/<instruction-file>.instructions.md#guideline-section-name
+
+**Correct example:**
+    Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/Dependency_management.instructions.md#dependency-management-guidenlines
+
 The following information provide more insights towards how a dependency could be framed. And How much it is important to use the right directive on systemd services.
 
 ## Dependency management Guidenlines
