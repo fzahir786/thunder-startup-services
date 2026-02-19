@@ -1,0 +1,8 @@
+[Unit]
+After=Wpeframework.service
+
+[Service]
+Type=simple
+ExecStart=config_check --option
+ExecStartPost=mkdir -p /var/run/config_checker
+RemainAfterExit=yes
