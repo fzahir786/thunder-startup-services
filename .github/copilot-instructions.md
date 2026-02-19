@@ -19,6 +19,14 @@ ExecStartPre=/usr/bin/mkdir -p /var/run/myapp
 ExecStop=/bin/kill -TERM $MAINPID
 ```
 
+**Incorrect example:**
+```ini
+[Service]
+ExecStart=mydaemon --option          # Missing path to the executable
+ExecStartPre=mkdir -p /var/run/myapp  # Relative command
+ExecStop=./stop.sh                    # Relative path to the directory
+```
+
 ## 2. Define appropriate service type
 
 - Prefer `Type=notify` and `Type=oneshot` over other types like `Type=simple`. 
@@ -108,24 +116,58 @@ RestartSec=5
 
 ## 5. Configure Reloads
 
-- It support reloading configuration without needing the full service to restart.
-- It reduces downtime for long running services.
-- Configuration changes can be applied with minimal interruption without needing a full restart.
+Enable configuration updates without stopping the service to avoid disrupting active operations.
 
 **Requirements**
 
-***Use ExecReload= for long-running services***
+***Without reload capability***
 
-- Send proper signal to main process(typically SIGHUP) which can reload the config without stopping
-- It should be only used for `Type=notify` or `Type=simple` services
-- It should not be used for `Type=oneshot` services
+- Configuration changes require full service restart.
+- Active connections/sessions are dropped.
+- Users experience service interruption (buffering, disconnections).
+
+***With reload capability***
+
+- Configuration updates applied while service keeps running.
+- Active users remain connected.
+- Zero downtime for configuration changes.
+- Better user experience in embedded environments.
+
+***For long-running daemon services***
+
+- Add `ExecReload=` directive to enable graceful configuration updates.
+- Send signal to main process (typically SIGHUP) that tells service to re-read its configuration.
+- Service must support signal-based reload.
+
+***Service type restrictions***
+
+- Use with` Type=notify` - long-running daemons with readiness notification.
+- Use with `Type=simple` - long-running daemons without notification.
+- Do not use with `Type=oneshot` - no running process to signal after task completes.
+
+***Common reload signals***
+
+- `SIGHUP` (signal 1) - Standard "reload configuration" signal.
+- `SIGUSR1` (signal 10) - Custom application-defined reload.
+- `SIGUSR2` (signal 12) - Alternate custom reload operation.
+- Do not use signals like `SIGTERM` (Terminates the service) and `SIGKILL` (Force kills service immediately).
 
 **Example:**
 ```ini
 [Service]
 Type=notify
-ExecStart=/usr/bin/mydaemon
+ExecStart=/usr/bin/nginx -g 'daemon off;'
 ExecReload=/bin/kill -HUP $MAINPID
+# nginx reloads config on SIGHUP without dropping connections
+```
+
+**Incorrect example:**
+```ini
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/initialize-system.sh
+ExecReload=/bin/kill -HUP $MAINPID  #No process is running to receive the signal
 ```
 
 ## 6. Avoid usage of custom script
@@ -146,6 +188,30 @@ ExecReload=/bin/kill -HUP $MAINPID
 # Instead of a script, use direct ExecStart in the unit file
 [Service]
 ExecStart=/usr/bin/myapp
+```
+
+**Incorrect example:**
+```ini
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/start-myapp.sh  #Wrapper script
+
+#content of wrapper script
+#!/bin/bash
+# Unnecessary wrapper doing simple tasks
+cd /opt/myapp
+export APP_CONFIG=/etc/myapp.conf
+exec /usr/bin/myapp --config $APP_CONFIG
+```
+
+**Corrected example:**
+```ini
+#instead of having it in wrapper script we can have the config in systemd service file directly 
+[Service]
+Type=notify
+WorkingDirectory=/opt/myapp
+Environment="APP_CONFIG=/etc/myapp.conf"
+ExecStart=/usr/bin/myapp --config /etc/myapp.conf
 ```
 
 ## 7. Usage of Drop-in files 
