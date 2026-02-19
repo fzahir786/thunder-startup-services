@@ -1,9 +1,9 @@
-## Review Comment guidelines
+# Review Comment guidelines
 When writing review comments use the following directives to provide more insights and suggest changes accordingly. 
 
-## Instruction Summary
+# Instruction Summary
 
-**1. Provide absolute path for Execution Directives**
+## 1. Provide absolute path for Execution Directives
 
 Always specify full absolute paths for Execution directives(service lifecycle commands) to avoid reliance on environment variables like `$PATH`, which systemd does not inherit.
 
@@ -19,7 +19,7 @@ ExecStartPre=/usr/bin/mkdir -p /var/run/myapp
 ExecStop=/bin/kill -TERM $MAINPID
 ```
 
-**2. Define appropriate service type**
+## 2. Define appropriate service type
 
 - Prefer `Type=notify` and `Type=oneshot` over other types like `Type=simple`. 
 - `Type=simple` doesn't guarantee service readiness, systemd just assumes it. And it causes race conditions where dependent services start before the service is truly operational.
@@ -47,7 +47,7 @@ Type=oneshot
 RemainAfterExit=yes
 ```
 
-**3. Dependency management requirement**
+## 3. Dependency management requirement
 
 - Define startup order and dependencies so services start only when prerequisites are ready.
 - Without dependencies, services start in random order causing race conditions and there might case where services may try to use resources before they're available (network, database, etc.)
@@ -81,7 +81,7 @@ Requires=db.service
 Wants=logger.service
 ```
 
-**4. Enabling of automatic restarts as per need**
+## 4. Enabling of automatic restarts as per need
 
 - It controls whether services can automatically restart after it crashes.
 - Defaultly services are not restarted automatically, it stays dead after a crash(`Restart=no`)
@@ -106,7 +106,7 @@ Restart=on-failure
 RestartSec=5
 ```
 
-**5. Configure Reloads**
+## 5. Configure Reloads
 
 - It support reloading configuration without needing the full service to restart.
 - It reduces downtime for long running services.
@@ -128,7 +128,7 @@ ExecStart=/usr/bin/mydaemon
 ExecReload=/bin/kill -HUP $MAINPID
 ```
 
-**6. Avoid usage of custom script**
+## 6. Avoid usage of custom script
 
 - Let systemd manage service lifecycle directly instead of using wrapper scripts.
 - Scripts add complexity and failure points and increases boot time
@@ -148,7 +148,7 @@ ExecReload=/bin/kill -HUP $MAINPID
 ExecStart=/usr/bin/myapp
 ```
 
-**7. Usage of Drop-in files**
+## 7. Usage of Drop-in files 
 
 - Use drop-in files for overrides, which preserves original packaged unit files and avoids editing `/usr/lib/systemd/system/` files.
 - Per-device customization without modifying base configuration.
@@ -173,7 +173,7 @@ Restart=always
 ExecStartPre= <Add my per device change>
 ```
 
-**8. Set Timeouts and Limits Appropriately**
+## 8. Set Timeouts and Limits Appropriately
 
 - Define how long systemd waits for service start/stop operations.
 - If timeout is not specified, systemd uses default timeout value (90 secs)
@@ -195,7 +195,7 @@ TimeoutStartSec=30
 TimeoutStopSec=10
 ```
 
-**9. Boot Integration Requirement**
+## 9. Boot Integration Requirement
 
 - Link services to targets like `multi-user.target` for auto-start at boot.
 - It is essential because services won't start automatically without `[Install]` section
@@ -214,7 +214,7 @@ TimeoutStopSec=10
 WantedBy=multi-user.target
 ```
 
-**10. Add proper description**
+## 10. Add proper description
 
 - Adding proper description helps to understand what the service is about. 
 
