@@ -3,7 +3,54 @@ When writing review comments use the following directives to provide more insigh
 
 # Instruction Summary
 
-## 1. Provide absolute path for Execution Directives
+## 1. Add proper service description
+
+- Always provide a clear, descriptive Description= in the `[Unit]` section to explain what the service does.
+
+**Requirements:**
+
+***Description must be***
+
+- Clear and specific about the service's purpose
+- Concise (one line summary)
+- Written in plain English
+- Helpful for others to understand what the service is about.
+
+***Try to avoid the following***
+
+- Generic descriptions like "My service" or "Service"
+- Just repeating the filename
+- Technical jargon without context
+- Empty or missing descriptions
+
+**Example:**
+```ini
+#Example 1
+[Unit]
+Description=Wi-Fi Configuration Manager for Embedded Devices
+
+#Example 2
+[Unit]
+Description=System Log Collection and Management Daemon
+```
+
+**Incorrect example:**
+```ini
+#Incorrect example 1
+[Unit]
+Description=My service  # "My service" tells nothing about what it does
+
+#incorrect example 2
+[Unit]
+Description=webapp.service  # Just repeating filename
+
+#incorrect example 3
+[Unit]
+# No description provided here
+After=network.target
+```
+
+## 2. Provide absolute path for Execution Directives
 
 Always specify full absolute paths for Execution directives(service lifecycle commands) to avoid reliance on environment variables like `$PATH`, which systemd does not inherit.
 
@@ -27,7 +74,7 @@ ExecStartPre=mkdir -p /var/run/myapp  # Relative command
 ExecStop=./stop.sh                    # Relative path to the directory
 ```
 
-## 2. Define appropriate service type
+## 3. Define appropriate service type
 
 - Prefer `Type=notify` and `Type=oneshot` over other types like `Type=simple`. 
 - `Type=simple` doesn't guarantee service readiness, systemd just assumes it. And it causes race conditions where dependent services start before the service is truly operational.
@@ -44,10 +91,6 @@ ExecStop=./stop.sh                    # Relative path to the directory
 - Service runs once and exits.
 - Systemd waits for command to complete.
 
-***When to use RemainAfterExit= with oneshot***
-- `RemainAfterExit=yes` - Task creates lasting state (mounts, directories, configuration). 
-- `RemainAfterExit=no` - Task is temporary cleanup with no persistent state.
-
 **Example:**
 ```ini
 [Service]
@@ -55,7 +98,67 @@ Type=oneshot
 RemainAfterExit=yes
 ```
 
-## 3. Dependency management requirement
+## 4.Service state management(RemainAfterExit)
+
+- Control whether systemd considers a service "active" after its process exits.
+- By default, when a service process exits, systemd marks it as "inactive".
+- But some services create persistent state (mounted filesystems, created directories, system configuration).
+- Other services depend on knowing if that state still exists.
+- RemainAfterExit= tells systemd whether the service's "effect" persists after the process exits.
+
+**Requirements:**
+
+***Use with `Type=oneshot` only***
+
+- `RemainAfterExit= `is only valid with `Type=oneshot`
+- Not applicable to `Type=notify` or `Type=simple` (they have running processes)
+- Attempting to use with other types is an error
+
+***When to use `RemainAfterExit=yes`***
+
+- Service creates persistent state that outlives the process
+- Other services depend on this state
+- Services that should appear "active" even after the command completes
+
+***When to use `RemainAfterExit=no`***
+
+- Service that performs temporary operation with no lasting state
+- Cleanup tasks and one-time operations can use `RemainAfterExit=no`
+- Service that are required to be "inactive" after completing
+
+**Example:**
+```ini
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Mount creates persistent state - filesystem remains mounted
+ExecStart=/bin/mount /dev/sdb1 /mnt/data
+ExecStop=/bin/umount /mnt/data
+```
+
+**Incorrect example:**
+```ini
+#incorrect example 1
+[Service]
+Type=notify
+RemainAfterExit=yes  #This is wrong - Type=notify has running process
+ExecStart=/usr/bin/mydaemon
+
+#incorrect example 2
+[Service]
+Type=oneshot
+RemainAfterExit=no  # This is wrong - Mount persists but service marked inactive
+ExecStart=/bin/mount /dev/sdb1 /mnt/data
+ExecStop=/bin/umount /mnt/data
+
+#incorrect example 3
+[Service]
+Type=oneshot
+# Missing RemainAfterExit - defaults to 'no' which is wrong here
+ExecStart=/bin/mkdir -p /var/run/myapp
+```
+
+## 5. Dependency management requirement
 
 - Define startup order and dependencies so services start only when prerequisites are ready.
 - Without dependencies, services start in random order causing race conditions and there might case where services may try to use resources before they're available (network, database, etc.)
@@ -89,12 +192,12 @@ Requires=db.service
 Wants=logger.service
 ```
 
-## 4. Enabling of automatic restarts as per need
+## 6. Enabling of automatic restarts as per need
 
 - It controls whether services can automatically restart after it crashes.
 - Defaultly services are not restarted automatically, it stays dead after a crash(`Restart=no`)
 
-**Requirements**
+**Requirements:**
 
 ***For critical services***
 
@@ -114,11 +217,11 @@ Restart=on-failure
 RestartSec=5
 ```
 
-## 5. Configure Reloads
+## 7. Configure Reloads
 
 Enable configuration updates without stopping the service to avoid disrupting active operations.
 
-**Requirements**
+**Requirements:**
 
 ***Without reload capability***
 
@@ -170,13 +273,13 @@ ExecStart=/usr/bin/initialize-system.sh
 ExecReload=/bin/kill -HUP $MAINPID  #No process is running to receive the signal
 ```
 
-## 6. Avoid usage of custom script
+## 8. Avoid usage of custom script
 
 - Let systemd manage service lifecycle directly instead of using wrapper scripts.
 - Scripts add complexity and failure points and increases boot time
 - Systemd can't track processes properly through scripts making it harder to debug and maintain
 
-**Requirements**
+**Requirements:**
 
 - Use direct commands in `ExecStart=` instead of scripts
 - Avoid shell script wrappers for start/stop logic
@@ -214,13 +317,13 @@ Environment="APP_CONFIG=/etc/myapp.conf"
 ExecStart=/usr/bin/myapp --config /etc/myapp.conf
 ```
 
-## 7. Usage of Drop-in files 
+## 9. Usage of Drop-in files 
 
 - Use drop-in files for overrides, which preserves original packaged unit files and avoids editing `/usr/lib/systemd/system/` files.
 - Per-device customization without modifying base configuration.
 - Easier to track changes and updates.
 
-**Requirements**
+**Requirements:**
 
 ***For RDK Components***
 
@@ -239,16 +342,16 @@ Restart=always
 ExecStartPre= <Add my per device change>
 ```
 
-## 8. Set Timeouts and Limits Appropriately
+## 10. Set Timeouts and Limits Appropriately
 
 - Define how long systemd waits for service start/stop operations.
 - If timeout is not specified, systemd uses default timeout value (90 secs)
 - Hung services block boot or shutdown
 - Clear expectations on timeout can prevent indefinite waits
 
-**Requirements**
+**Requirements:**
 
-***Always specify both:***
+***Always specify both***
 
 - `TimeoutStartSec=` - How long to wait for service startup (it should be 30 secs or less).
 - `TimeoutStopSec=` - How long to wait for graceful shutdown (it should be 10 secs or less).
@@ -261,31 +364,22 @@ TimeoutStartSec=30
 TimeoutStopSec=10
 ```
 
-## 9. Boot Integration Requirement
+## 11. Boot Integration Requirement
 
 - Link services to targets like `multi-user.target` for auto-start at boot.
 - It is essential because services won't start automatically without `[Install]` section
 - It is required to ensure that proper target linkage happens at boot phase
 
-**Requirements**
+**Requirements:**
 
 ***Must include `[Install]` section:***
 
 - Add `WantedBy=multi-user.target` for systemd services to ensure auto-start at boot.
-- It enables the service to start at boot.
+- It enables services to start automatically during bootup.
+- It can be used for standalone services(not a dependency).
 
 **Example:**
 ```ini
 [Install]
 WantedBy=multi-user.target
-```
-
-## 10. Add proper description
-
-- Adding proper description helps to understand what the service is about. 
-
-**Example:**
-```ini
-[Unit]
-Description=My service
 ```
