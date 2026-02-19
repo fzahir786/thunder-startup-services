@@ -263,13 +263,6 @@ ExecReload=/bin/kill -HUP $MAINPID  #No process is running to receive the signal
 - Do not use `PIDFile=` unless service forks non-standardly
 - it allows systemd to automatically track the main process
 
-**Example:**
-```ini
-# Instead of a script, use direct ExecStart in the unit file
-[Service]
-ExecStart=/usr/bin/myapp
-```
-
 **Incorrect example:**
 ```ini
 [Service]
@@ -349,7 +342,7 @@ TimeoutStopSec=10
 
 **Requirements:**
 
-***Must include `[Install]` section:***
+***Must include `[Install]` section***
 
 - Add `WantedBy=multi-user.target` for systemd services to ensure auto-start at boot.
 - It enables services to start automatically during bootup.
