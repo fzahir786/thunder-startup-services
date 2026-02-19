@@ -1,3 +1,7 @@
+---
+applyTo: "systemd/system/*.service"
+---
+
 ### Review Comment Linking Guidelines
 
 When writing review comments based on custom instructions located in .github/instructions/**.instructions.md, include a direct GitHub link to the exact violated guideline in the respective instruction file. Use the following format:
