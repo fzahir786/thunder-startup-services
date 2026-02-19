@@ -5,7 +5,7 @@ When writing review comments use the following directives to provide more insigh
 
 ## 1. Add proper service description
 
-- Always provide a clear, descriptive Description= in the `[Unit]` section to explain what the service does.
+Always provide a clear, descriptive Description= in the `[Unit]` section to explain what the service does.
 
 **Requirements:**
 
@@ -28,10 +28,6 @@ When writing review comments use the following directives to provide more insigh
 #Example 1
 [Unit]
 Description=Wi-Fi Configuration Manager for Embedded Devices
-
-#Example 2
-[Unit]
-Description=System Log Collection and Management Daemon
 ```
 
 **Incorrect example:**
@@ -43,11 +39,6 @@ Description=My service  # "My service" tells nothing about what it does
 #incorrect example 2
 [Unit]
 Description=webapp.service  # Just repeating filename
-
-#incorrect example 3
-[Unit]
-# No description provided here
-After=network.target
 ```
 
 ## 2. Provide absolute path for Execution Directives
@@ -138,12 +129,6 @@ ExecStop=/bin/umount /mnt/data
 
 **Incorrect example:**
 ```ini
-#incorrect example 1
-[Service]
-Type=notify
-RemainAfterExit=yes  #This is wrong - Type=notify has running process
-ExecStart=/usr/bin/mydaemon
-
 #incorrect example 2
 [Service]
 Type=oneshot
