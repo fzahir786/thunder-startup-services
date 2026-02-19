@@ -1,6 +1,6 @@
 The following information provide more insights towards how a dependency could be framed. And How much it is important to use the right directive on systemd services.
 
-## Dependency management
+## Dependency management Guidenlines
 
 - Define startup order and dependencies so services start only when prerequisites are ready.
 - Without dependencies, services start in random order causing race conditions and there might case where services may try to use resources before they're available (network, database, etc.)
@@ -25,6 +25,14 @@ The following information provide more insights towards how a dependency could b
 - Use it when service does not restart if dependency restarts.
 - It must be paired with `After=` or `Before=` for ordering.
 - Use for optional features or platform-specific services.
+
+**Example:**
+```ini
+[Unit]
+After=network.target
+Requires=db.service
+Wants=logger.service
+```
 
 The following are some scenario's which defines how a configuration works based on the above guidelines, which can be essential while providing review comments.
 
