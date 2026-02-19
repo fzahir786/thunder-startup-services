@@ -70,3 +70,14 @@ In the context of systemd:
 |Fully Active|	The service's main process has successfully been launched and is running. Systemd has confirmed that the initial startup command succeeded.|	Systemd knows the process is running, but it does not guarantee that the application is ready to handle requests (e.g., ports might still be binding, configuration loading).|
 |Fully Ready|	The service is running and has completed all its internal initialization tasks (e.g., loaded config, connected to database, opened sockets, accepted connections).|	The service is guaranteed to be ready to perform its function, and any service waiting with an After= constraint can safely start using it.|
 
+**Fully Active (Systemd State)**
+
+- "Fully Active" refers to the state reported by systemd itself, typically seen as Active: `active (running)` in the output of systemctl status <unit>.
+- ***Fully Active state*** is reached as soon as the service's primary execution command (usually specified by `ExecStart=`) returns successfully, and the process is established.
+- Systemd only manages the process lifecycle. When the process starts, the unit is active. By default Systemd is blind to the internal initialization logic of the application.
+
+**Fully Ready (Application State)**
+
+- "Fully Ready" refers to the state where the application running inside the process is capable of doing its job.
+- **Fully Ready state** is reached only after the application finishes internal tasks (e.g., A plugin completed all its initialisation sequence and it is ready to service the clients).
+- Systemd usually relies on Type=notify units to know when a service is truly ready. With Type=notify, the service actively sends a signal back to systemd via the sd_notify() function (or an equivalent) once it's done initialising. Only then does systemd consider the unit's startup sequence complete.
