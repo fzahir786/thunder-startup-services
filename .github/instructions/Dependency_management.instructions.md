@@ -34,7 +34,7 @@ Requires=db.service
 Wants=logger.service
 ```
 
-The following are some scenario's which defines how a configuration works based on the above guidelines, which can be essential while providing review comments.
+The following are some scenario's which defines how a configuration works based on the above guidelines and states associated with it, which can be essential while providing review comments.
 
 ### Part 1: Startup Behaviour (Dependent Service Fails or Succeeds)
 
