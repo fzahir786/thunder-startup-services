@@ -36,7 +36,7 @@ Wants=logger.service
 
 The following are some scenario's which defines how a configuration works based on the above guidelines and states associated with it, which can be essential while providing review comments.
 
-### Part 1: Startup Behaviour (Dependent Service Fails or Succeeds)
+### Startup Behaviour (Dependent Service Fails or Succeeds)
 
 
 |Combination in A|	Service B's Startup Outcome|	Service A's Startup Outcome|	Explanation|
@@ -50,9 +50,9 @@ The following are some scenario's which defines how a configuration works based 
 |Requires=B, After=B|	B Succeeds|	A Starts|	Standard Critical Setup: A waits for B to be `fully ready`<sup>1</sup> (After), then starts (permitted by Requires).|
 |Requires=B, After=B|	B Fails|	A Fails|	Strong Dependency: A waits for B to finalise (After), sees the failure, and aborts its own startup due to the unmet Requires constraint.|
 
-<sup>1</sup>Refer Part 3
+<sup>1</sup>Refer -> https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/instructions/Dependency_management.instructions.md#fully-ready-vs-fully-active
 
-### Part 2: Runtime Behaviour (Crashes and Restarts)
+### Runtime Behaviour (Crashes and Restarts)
 
 - This scenario occurs after both services have successfully started and are running. 
 - The behaviour here is primarily governed by the strength of the dependency (Wants vs. Requires) and the "Restart="<sup>2</sup> setting in the service files.
@@ -64,12 +64,12 @@ The following are some scenario's which defines how a configuration works based 
 |Requires=B|	B Crashes and Restarts|	A Stops (and restarts, if configured)|	Strong Dependency: When B crashes, systemd recognizes the strong dependency and stops A. If A has `Restart=`<sup>2</sup> configured, it will restart immediately after being stopped.|
 |Requires=B|	B Crashes and Stops|	A Stops|	Strong Dependency: A stops because its required service is `no longer active`<sup>1</sup>. A remains stopped unless an external trigger restarts it.|
 
-<sup>1</sup>Refer Part 3
+<sup>1</sup>Refer -> https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/instructions/Dependency_management.instructions.md#fully-ready-vs-fully-active
 
-<sup>2</sup>Refer Part 4
+<sup>2</sup>Refer -> https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/Restart_directive.instructions.md#the-restart-directive
 
 
-## Part 3: Fully Ready Vs Fully Active
+## Fully Ready Vs Fully Active
 
 In the context of systemd:
 
