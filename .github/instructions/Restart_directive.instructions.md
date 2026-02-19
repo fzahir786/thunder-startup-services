@@ -1,3 +1,18 @@
+---
+applyTo: "systemd/system/*.service"
+---
+
+### Review Comment Linking Guidelines
+
+When writing review comments based on custom instructions located in .github/instructions/**.instructions.md, include a direct GitHub link to the exact violated guideline in the respective instruction file. Use the following format:
+
+    Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/<instruction-file>.instructions.md#guideline-section-name
+
+**Correct example:**
+    
+    Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/Restart_directive.instructions.md#enabling-of-automatic-restarts-as-per-need
+    Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/Restart_directive.instructions.md#the-restart-directive
+    
 The following provides details on Restart directive. More information on what restart directive can be used depending on the service requirement.
 
 ## Enabling of automatic restarts as per need

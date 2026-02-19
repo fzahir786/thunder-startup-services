@@ -6,12 +6,12 @@ When writing review comments based on custom instructions located in .github/ins
 
 ## Examples
 
-    Refer: https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#1-add-proper-service-description 
+    Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#1-add-proper-service-description 
     Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/Dependency_management.instructions.md#dependency-management-guidenlines
     
 
 # Instruction Summary
-  1. [Add proper service description](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#1-add-proper-service-description)
+  1. [Add proper service description](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#1-add-proper-service-description)
   2. [Provide absolute path for Execution Directives](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#2-provide-absolute-path-for-execution-directives)
   3. [Define appropriate service type](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#3-define-appropriate-service-type)
   4. [Service state management(RemainAfterExit)](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#4-service-state-managementremainafterexit)
