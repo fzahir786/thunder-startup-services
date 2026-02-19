@@ -9,9 +9,7 @@ Always provide a clear, descriptive Description= in the `[Unit]` section to expl
 
 **Requirements:**
 
-***Description must be***
-
-- Clear and specific about the service's purpose
+- It should be Clear and specific about the service's purpose
 - Helpful for others to understand what the service is about.
 - Try to avoid generic descriptions, repeating filenames or missing descriptions.
   
