@@ -1,0 +1,8 @@
+[Unit]
+Description=WPEFramework boot Initialiser
+Requires=wpeframework.service wpeframework-persistentstore.service wpeframework-system.service wpeframework-deviceinfo.service
+ConditionPathExists=/tmp/wpeframeworkstarted
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/PluginActivator org.rdk.boot
