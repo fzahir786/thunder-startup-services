@@ -57,6 +57,7 @@ The following are some scenario's which defines how a configuration works based 
 |Requires=B|	B Crashes and Stops|	A Stops|	Strong Dependency: A stops because its required service is `no longer active`<sup>1</sup>. A remains stopped unless an external trigger restarts it.|
 
 <sup>1</sup>Refer Part 3
+
 <sup>2</sup>Refer Part 4
 
 
