@@ -12,17 +12,9 @@ Always provide a clear, descriptive Description= in the `[Unit]` section to expl
 ***Description must be***
 
 - Clear and specific about the service's purpose
-- Concise (one line summary)
-- Written in plain English
 - Helpful for others to understand what the service is about.
-
-***Try to avoid the following***
-
-- Generic descriptions like "My service" or "Service"
-- Just repeating the filename
-- Technical jargon without context
-- Empty or missing descriptions
-
+- Try to avoid generic descriptions, repeating filenames or missing descriptions.
+  
 **Example:**
 ```ini
 #Example 1
