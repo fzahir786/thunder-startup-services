@@ -25,7 +25,7 @@ Restart=on-failure
 RestartSec=5
 ```
 
-### Part 4: Restart directive
+### The Restart directive
 
 - The `Restart=` directive controls the conditions under which systemd should automatically attempt to restart the service process after it exits.
 - Here are all the possible values for the Restart= directive and the conditions that trigger an automatic restart:
