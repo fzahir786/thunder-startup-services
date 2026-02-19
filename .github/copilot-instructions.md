@@ -13,12 +13,12 @@ When writing review comments based on custom instructions located in .github/ins
   1. [Add proper service description](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#1-add-proper-service-description)
   2. [Provide absolute path for Execution Directives](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#2-provide-absolute-path-for-execution-directives)
   3. [Define appropriate service type](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#3-define-appropriate-service-type)
-  4. [Service state management(RemainAfterExit)](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#4service-state-managementremainafterexit)
-  5. [Configure Reloads](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#5-configure-reloads)
-  6. [Avoid usage of custom script](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#6-avoid-usage-of-custom-script)
-  7. [Usage of Drop-in files](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#7-usage-of-drop-in-files)
-  8. [Set Timeouts and Limits Appropriately](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#8-set-timeouts-and-limits-appropriately)
-  9. [Boot Integration Requirement](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#9-boot-integration-requirement)
+  4. [Service state management(RemainAfterExit)](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#4-service-state-managementremainafterexit)
+  5. [Configure Reloads](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#5-configure-reloads)
+  6. [Avoid usage of custom script](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#6-avoid-usage-of-custom-script)
+  7. [Usage of Drop-in files](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#7-usage-of-drop-in-files)
+  8. [Set Timeouts and Limits Appropriately](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#8-set-timeouts-and-limits-appropriately)
+  9. [Boot Integration Requirement](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#9-boot-integration-requirement)
 
 ## 1. Add proper service description
 
