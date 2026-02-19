@@ -7,6 +7,7 @@ When writing review comments based on custom instructions located in .github/ins
 ## Examples
 
     Refer: https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#1-add-proper-service-description 
+    Refer: https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/instructions/Dependency_requirement.instructions.md#dependency-management
     
 
 # Instruction Summary
