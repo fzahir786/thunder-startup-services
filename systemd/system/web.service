@@ -1,0 +1,7 @@
+[Unit]
+Description=Web Application Service
+Requires=database.service
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/webapp --db-connect localhost:5432
