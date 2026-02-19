@@ -1,7 +1,24 @@
-# Review Comment guidelines
-When writing review comments use the following directives to provide more insights and suggest changes accordingly. 
+### Review Comment Linking Guidelines
+
+When writing review comments based on custom instructions located in .github/instructions/**.instructions.md, include a direct GitHub link to the exact violated guideline in the respective instruction file. Use the following format:
+
+    Refer: https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#guideline-section-name
+
+## Examples
+
+    Refer: https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#1-add-proper-service-description 
+    
 
 # Instruction Summary
+  1. [Add proper service description](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#1-add-proper-service-description)
+  2. [Provide absolute path for Execution Directives](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#2-provide-absolute-path-for-execution-directives)
+  3. [Define appropriate service type](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#3-define-appropriate-service-type)
+  4. [Service state management(RemainAfterExit)](https://github.com/fzahir786/thunder-startup-services/blob/develop/.github/copilot-instructions.md#4service-state-managementremainafterexit)
+  5. [Configure Reloads](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#5-configure-reloads)
+  6. [Avoid usage of custom script](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#6-avoid-usage-of-custom-script)
+  7. [Usage of Drop-in files](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#7-usage-of-drop-in-files)
+  8. [Set Timeouts and Limits Appropriately](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#8-set-timeouts-and-limits-appropriately)
+  9. [Boot Integration Requirement](https://github.com/fzahir786/thunder-startup-services/edit/develop/.github/copilot-instructions.md#9-boot-integration-requirement)
 
 ## 1. Add proper service description
 
@@ -79,7 +96,7 @@ Type=oneshot
 RemainAfterExit=yes
 ```
 
-## 4.Service state management(RemainAfterExit)
+## 4. Service state management(RemainAfterExit)
 
 - Control whether systemd considers a service "active" after its process exits.
 - By default, when a service process exits, systemd marks it as "inactive".
@@ -133,66 +150,7 @@ Type=oneshot
 ExecStart=/bin/mkdir -p /var/run/myapp
 ```
 
-## 5. Dependency management requirement
-
-- Define startup order and dependencies so services start only when prerequisites are ready.
-- Without dependencies, services start in random order causing race conditions and there might case where services may try to use resources before they're available (network, database, etc.)
-- CPC services must never be added as dependencies to publicly available services.
-  
-**Requirements:**
-
-***Use `After=` for ordering***
-
-- Controls when service starts relative to others
-- Example: After=network.target means "start after network is available"
-
-***Use `Requires=` for strict dependencies***
-
-- Use it when a service cannot start if dependency(strict) fails. 
-- If dependency crashes/restarts, this service also restarts.
-- Use for critical dependencies.
-
-***Use Wants= for optional dependencies***
-
-- Use it when service can start even if dependency(soft/optional) is missing.
-- Use it when service does not restart if dependency restarts.
-- It must be paired with `After=` or `Before=` for ordering.
-- Use for optional features or platform-specific services.
-
-**Example:**
-```ini
-[Unit]
-After=network.target
-Requires=db.service
-Wants=logger.service
-```
-
-## 6. Enabling of automatic restarts as per need
-
-- It controls whether services can automatically restart after it crashes.
-- Defaultly services are not restarted automatically, it stays dead after a crash(`Restart=no`)
-
-**Requirements:**
-
-***For critical services***
-
-- Do not use `Restart=` (keep default `Restart=no`)
-- Crashes indicate state corruption - device should reboot
-
-***For non-critical services***
-
-- Use `Restart=on-failure` to recover from crashes
-- Always pair with `RestartSec=` (minimum 1 second)
-- Prevents rapid restart loops that exhaust resources
-
-**Example:**
-```ini
-[Service]
-Restart=on-failure
-RestartSec=5
-```
-
-## 7. Configure Reloads
+## 5. Configure Reloads
 
 Enable configuration updates without stopping the service to avoid disrupting active operations.
 
@@ -248,7 +206,7 @@ ExecStart=/usr/bin/initialize-system.sh
 ExecReload=/bin/kill -HUP $MAINPID  #No process is running to receive the signal
 ```
 
-## 8. Avoid usage of custom script
+## 6. Avoid usage of custom script
 
 - Let systemd manage service lifecycle directly instead of using wrapper scripts.
 - Scripts add complexity and failure points and increases boot time
@@ -285,7 +243,7 @@ Environment="APP_CONFIG=/etc/myapp.conf"
 ExecStart=/usr/bin/myapp --config /etc/myapp.conf
 ```
 
-## 9. Usage of Drop-in files 
+## 7. Usage of Drop-in files 
 
 - Use drop-in files for overrides, which preserves original packaged unit files and avoids editing `/usr/lib/systemd/system/` files.
 - Per-device customization without modifying base configuration.
@@ -310,7 +268,7 @@ Restart=always
 ExecStartPre= <Add my per device change>
 ```
 
-## 10. Set Timeouts and Limits Appropriately
+## 8. Set Timeouts and Limits Appropriately
 
 - Define how long systemd waits for service start/stop operations.
 - If timeout is not specified, systemd uses default timeout value (90 secs)
@@ -332,7 +290,7 @@ TimeoutStartSec=30
 TimeoutStopSec=10
 ```
 
-## 11. Boot Integration Requirement
+## 9. Boot Integration Requirement
 
 - Link services to targets like `multi-user.target` for auto-start at boot.
 - It is essential because services won't start automatically without `[Install]` section
