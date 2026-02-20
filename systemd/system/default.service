@@ -1,0 +1,11 @@
+[Unit]
+After=myservice.service
+
+[Service]
+Type=simple
+ExecStart=mydaemon --option
+ExecStartPost=mkdir -p /var/run/myapp
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target
