@@ -1,0 +1,12 @@
+[Unit]
+Description=My daemon service
+After=network.target database.service logger.service
+Requires=database.service
+Wants=logger.service
+[Service]
+Type=notify
+ExecStart=/usr/bin/mydaemon --config /etc/mydaemon.conf
+TimeoutStartSec=30
+TimeoutStopSec=10
+[Install]
+WantedBy=multi-user.target
